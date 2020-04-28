@@ -4,43 +4,30 @@ import {
   Post,
   Put,
   Delete,
-  HttpCode,
-  Header,
-  Redirect,
-  Query,
   Param,
+  Body,
 } from '@nestjs/common';
+import { ProductsService } from './products.service';
+import { CreateProductDTO } from './dto/create-product.dto';
+import { Product } from './interfaces/product.interface';
 
 @Controller('products')
 export class ProductsController {
-  @Get('ab*cd')
-  pattern(): string {
-    return 'pattern';
-  }
+  constructor(private productService: ProductsService) {}
 
   @Get()
-  findAll(): string {
-    return 'find all';
-  }
-
-  @Get('docs')
-  @Redirect('https://docs.nestjs.com', 302)
-  getDocs(@Query('version') version) {
-    if (version && version === '5') {
-      return { url: 'https://docs.nestjs.com/v5' };
-    }
+  async find(): Promise<Product[]> {
+    return this.productService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param() params): string {
-    return params;
+  async findOne(@Param() params): Promise<Product> {
+    return this.productService.findOne(params.id);
   }
 
   @Post()
-  @HttpCode(204)
-  @Header('Authorization', 'Bearer ABCDEFGH')
-  create(): string {
-    return 'new product';
+  async create(@Body() product: CreateProductDTO): Promise<Product[]> {
+    return this.productService.create(product);
   }
 
   @Put()
@@ -48,8 +35,8 @@ export class ProductsController {
     return 'update product';
   }
 
-  @Delete()
-  delete(): string {
-    return 'delete product';
+  @Delete(':id')
+  async delete(@Param() params): Promise<Product[]> {
+    return this.productService.delete(params.id);
   }
 }
