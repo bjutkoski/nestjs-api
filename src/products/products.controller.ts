@@ -36,7 +36,7 @@ export class ProductsController {
   }
 
   @Post()
-  async create(@Body() product: CreateProductDTO): Promise<Product[]> {
+  async create(@Body() product: CreateProductDTO): Promise<Product> {
     return this.productService.create(product);
   }
 
